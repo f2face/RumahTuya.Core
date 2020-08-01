@@ -53,7 +53,8 @@ namespace RumahTuya.Devices
 
             Commands commands = new Commands();
             commands.AddCommand("work_mode", "colour");
-            commands.AddCommand("colour_data_v2", new {
+            commands.AddCommand("colour_data_v2", new
+            {
                 h = Math.Round(hsv.H),
                 s = Math.Round(hsv.S * 1000),
                 v = Math.Round(hsv.V * 1000)
@@ -68,7 +69,8 @@ namespace RumahTuya.Devices
 
             Commands commands = new Commands();
             commands.AddCommand("work_mode", "colour");
-            commands.AddCommand("colour_data_v2", new {
+            commands.AddCommand("colour_data_v2", new
+            {
                 h = Math.Round(hsv.H),
                 s = Math.Round(hsv.S * 1000),
                 v = Math.Round(hsv.V * 1000)
@@ -88,7 +90,8 @@ namespace RumahTuya.Devices
 
             Commands commands = new Commands();
             commands.AddCommand("work_mode", "colour");
-            commands.AddCommand("colour_data_v2", new {
+            commands.AddCommand("colour_data_v2", new
+            {
                 h = Math.Round(hsv.H),
                 s = Math.Round(hsv.S * 1000),
                 v = Math.Round(hsv.V * 1000)

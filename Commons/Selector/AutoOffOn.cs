@@ -1,4 +1,4 @@
-﻿namespace RumahTuya.Commons
+﻿namespace RumahTuya.Commons.Selector
 {
     public enum AutoOffOn
     {

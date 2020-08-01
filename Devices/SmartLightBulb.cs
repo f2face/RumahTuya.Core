@@ -22,7 +22,7 @@ namespace RumahTuya.Devices
             Commands commands = new Commands("switch_led", false);
             return base.rumahTuya.SendCommands(deviceId, commands);
         }
-    
+
         public Task<CommandResponse> SetBrightness(int brightness)
         {
             if (!base.ValidateNumber(brightness, 10, 1000))
@@ -33,7 +33,7 @@ namespace RumahTuya.Devices
             Commands commands = new Commands("bright_value_v2", brightness);
             return base.rumahTuya.SendCommands(deviceId, commands);
         }
-    
+
         public Task<CommandResponse> SetPowerCountdownTimer(int minutes)
         {
             if (!base.ValidateNumber(minutes, 0, 1440))
@@ -47,7 +47,7 @@ namespace RumahTuya.Devices
 
         public async Task<int> GetCountdownTimer()
         {
-            return int.Parse((await this.GetStatus()).GetAttribute("countdown_1"));
+            return int.Parse((await GetStatus()).GetAttribute("countdown_1"));
         }
     }
 }

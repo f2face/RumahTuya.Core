@@ -46,7 +46,7 @@ namespace RumahTuya.Devices
 
         public Task<Attributes> GetStatus()
         {
-           return rumahTuya.GetDeviceStatus(deviceId);
+            return rumahTuya.GetDeviceStatus(deviceId);
         }
 
         public Task<DeviceSpecs> GetSpecifications()

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Refit;
+using RumahTuya.Exceptions;
+using RumahTuya.Request;
+using RumahTuya.Response;
+using System;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Refit;
-using RumahTuya.Request;
-using RumahTuya.Response;
-using System.Net.Http;
-using RumahTuya.Exceptions;
 
 namespace RumahTuya
 {
@@ -27,13 +27,13 @@ namespace RumahTuya
         {
             HttpClient httpClient = new HttpClient
             {
-                BaseAddress = new Uri(this.baseUrl)
+                BaseAddress = new Uri(baseUrl)
             };
 
-            httpClient.DefaultRequestHeaders.Add("User-Agent", this.userAgent);
-            httpClient.DefaultRequestHeaders.Add("client_id", this.clientId);
-            httpClient.DefaultRequestHeaders.Add("sign_method", this.signMethod);
-            httpClient.DefaultRequestHeaders.Add("lang", this.language);
+            httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
+            httpClient.DefaultRequestHeaders.Add("client_id", clientId);
+            httpClient.DefaultRequestHeaders.Add("sign_method", signMethod);
+            httpClient.DefaultRequestHeaders.Add("lang", language);
 
             httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
             httpClient.DefaultRequestHeaders.Add("Keep-Alive", "timeout=600");
@@ -111,7 +111,7 @@ namespace RumahTuya
 
             return response.Result;
         }
-        
+
         public async Task<Attributes> GetDeviceStatus(string deviceId)
         {
             if (credentials == null || credentials?.AccessToken.Length == 0)
@@ -133,7 +133,7 @@ namespace RumahTuya
 
             return response.Result;
         }
-        
+
         public async Task<DeviceSpecs> GetDeviceSpecifications(string deviceId)
         {
             if (credentials == null || credentials?.AccessToken.Length == 0)
@@ -155,7 +155,7 @@ namespace RumahTuya
 
             return response.Result;
         }
-        
+
         public async Task<DeviceFunctions> GetDeviceFunctions(string deviceId)
         {
             if (credentials == null || credentials?.AccessToken.Length == 0)
@@ -167,7 +167,7 @@ namespace RumahTuya
             Response.ApiResponse<DeviceFunctions> response = await api.GetDeviceFunctions(
                 sig.Signature,
                 sig.Timestamp,
-                this.credentials.AccessToken,
+                credentials.AccessToken,
                 deviceId);
 
             if (!response.IsSuccess)

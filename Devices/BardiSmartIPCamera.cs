@@ -1,6 +1,6 @@
-﻿using RumahTuya.Commons;
-using RumahTuya.Response;
+﻿using RumahTuya.Commons.Selector;
 using RumahTuya.Request;
+using RumahTuya.Response;
 using System.Threading.Tasks;
 
 namespace RumahTuya.Devices
@@ -23,7 +23,7 @@ namespace RumahTuya.Devices
             Commands commands = new Commands("basic_nightvision", nightVision);
             return rumahTuya.SendCommands(deviceId, commands);
         }
-        
+
         public Task<CommandResponse> SetFlipDisplay(bool flipDisplay)
         {
             Commands commands = new Commands("basic_flip", flipDisplay);
@@ -42,13 +42,13 @@ namespace RumahTuya.Devices
             Commands commands = new Commands("motion_switch", motionDetectionSwitch);
             return rumahTuya.SendCommands(deviceId, commands);
         }
-        
+
         public Task<CommandResponse> SetMotionDetectionSensitivity(LowMediumHigh motionDetectionSensitivity)
         {
             Commands commands = new Commands("motion_sensitivity", motionDetectionSensitivity);
             return rumahTuya.SendCommands(deviceId, commands);
         }
-        
+
         public Task<CommandResponse> SetMotionAreaSwitch(bool motionAreaSwitch)
         {
             Commands commands = new Commands("motion_area_switch", motionAreaSwitch);

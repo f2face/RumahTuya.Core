@@ -5,7 +5,7 @@ namespace RumahTuya.Exceptions
     class ResponseException : Exception
     {
         public int Code { get; }
-        
+
         public ResponseException(string message, int code) : base(message)
         {
             Code = code;

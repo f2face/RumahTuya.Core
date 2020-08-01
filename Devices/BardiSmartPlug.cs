@@ -26,7 +26,7 @@ namespace RumahTuya.Devices
             Attributes attr = await GetStatistics();
             return float.Parse(attr.GetAttribute("cur_power")) / 10;
         }
-        
+
         public async Task<float> GetVoltage()
         {
             Attributes attr = await GetStatistics();

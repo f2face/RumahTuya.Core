@@ -8,7 +8,7 @@ namespace RumahTuya.Exceptions
         public UnauthorizedException() : base()
         {
         }
-        
+
         public UnauthorizedException(string message) : base(message)
         {
         }
