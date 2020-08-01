@@ -1,12 +1,22 @@
-﻿namespace RumahTuya.Response
+﻿using Newtonsoft.Json;
+
+namespace RumahTuya.Response
 {
-#pragma warning disable IDE1006 // Naming Styles
     public class ApiResponse<IResult> : BaseResponse
     {
-        public bool success { get; set; }
-        public long t { get; set; }
-        public IResult result { get; set; }
-        public int code { get; set; }
-        public string msg { get; set; }
+        [JsonProperty("success")]
+        public bool IsSuccess { get; set; }
+
+        [JsonProperty("code")]
+        public int ResponseCode { get; set; }
+
+        [JsonProperty("msg")]
+        public string ResponseMessage { get; set; }
+
+        [JsonProperty("result")]
+        public virtual IResult Result { get; set; }
+
+        [JsonProperty("t")]
+        public long Timestamp { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Refit;
 using RumahTuya.Request;
 using RumahTuya.Response;
 using System.Net.Http;
+using RumahTuya.Exceptions;
 
 namespace RumahTuya
 {
@@ -13,7 +14,7 @@ namespace RumahTuya
     {
         protected string baseUrl = "https://openapi.tuyaus.com";
         protected string signMethod = "HMAC-SHA256";
-        protected string userAgent = "RumahTuya-dotNET/0.1.0";
+        protected string userAgent = "RumahTuya-dotNET/0.2.0";
         protected string language = "en";
 
         private readonly string clientId;
@@ -44,146 +45,174 @@ namespace RumahTuya
         {
             this.clientId = clientId;
             this.clientSecret = clientSecret;
-            this.api = RestService.For<IRequest>(this.HttpClient());
+            api = RestService.For<IRequest>(HttpClient());
         }
 
-        public Task<Response.ApiResponse<Credentials>> Authorize()
+        public async Task<Credentials> Authorize()
         {
-            RequestSignature sig = this.GenerateRequestSignature();
-            Task<Response.ApiResponse<Credentials>> task = this.api.GetAccessToken(
+            RequestSignature sig = GenerateRequestSignature();
+            Response.ApiResponse<Credentials> response = await api.GetAccessToken(
                 sig.Signature,
                 sig.Timestamp);
-            task.ContinueWith(action =>
-            {
-                Response.ApiResponse<Credentials> response = action.Result;
-                if (response.success)
-                {
-                    credentials = response.result;
-                    credentials.timestamp = response.t;
-                }
-            });
 
-            return task;
-        }
-
-        public Task<Response.ApiResponse<Credentials>> Reauthorize()
-        {
-            if (this.credentials == null || this.credentials?.refresh_token.Length == 0)
+            if (!response.IsSuccess)
             {
-                return this.Authorize();
+                throw new ResponseException(response.ResponseMessage, response.ResponseCode);
             }
 
-            RequestSignature sig = this.GenerateRequestSignature();
-            Task<Response.ApiResponse<Credentials>> task = this.api.RefreshAccessToken(
-                this.credentials.refresh_token,
+            credentials = response.Result;
+            credentials.Timestamp = response.Timestamp;
+
+            return credentials;
+        }
+
+        public async Task<Credentials> Reauthorize()
+        {
+            if (credentials == null || credentials?.RefreshToken.Length == 0)
+            {
+                return await Authorize();
+            }
+
+            RequestSignature sig = GenerateRequestSignature();
+            Response.ApiResponse<Credentials> response = await api.RefreshAccessToken(
+                credentials.RefreshToken,
                 sig.Signature,
                 sig.Timestamp);
-            task.ContinueWith(action =>
-            {
-                Response.ApiResponse<Credentials> response = action.Result;
-                if (response.success)
-                {
-                    credentials = response.result;
-                    credentials.timestamp = response.t;
-                }
-            });
 
-            return task;
-        }
-
-        public Task<string> GetDeviceInfo(string deviceId)
-        {
-            if (this.credentials == null || this.credentials?.access_token.Length == 0)
+            if (!response.IsSuccess)
             {
-                throw new Exceptions.UnauthorizedException("Unauthorized");
+                throw new ResponseException(response.ResponseMessage, response.ResponseCode);
             }
 
-            RequestSignature sig = this.GenerateRequestSignature(this.credentials.access_token);
-            Task<string> task = this.api.GetDeviceInfo(
+            credentials = response.Result;
+            credentials.Timestamp = response.Timestamp;
+
+            return credentials;
+        }
+
+        public async Task<DeviceInfo> GetDeviceInfo(string deviceId)
+        {
+            if (credentials == null || credentials?.AccessToken.Length == 0)
+            {
+                throw new UnauthorizedException("Unauthorized");
+            }
+
+            RequestSignature sig = GenerateRequestSignature(credentials.AccessToken);
+            Response.ApiResponse<DeviceInfo> response = await api.GetDeviceInfo(
                 sig.Signature,
                 sig.Timestamp,
-                this.credentials.access_token,
+                credentials.AccessToken,
                 deviceId);
-            return task;
+
+            if (!response.IsSuccess)
+            {
+                throw new ResponseException(response.ResponseMessage, response.ResponseCode);
+            }
+
+            return response.Result;
         }
         
-        public Task<string> GetDeviceStatus(string deviceId)
+        public async Task<Attributes> GetDeviceStatus(string deviceId)
         {
-            if (this.credentials == null || this.credentials?.access_token.Length == 0)
+            if (credentials == null || credentials?.AccessToken.Length == 0)
             {
-                throw new Exceptions.UnauthorizedException("Unauthorized");
+                throw new UnauthorizedException("Unauthorized");
             }
 
-            RequestSignature sig = this.GenerateRequestSignature(this.credentials.access_token);
-            Task<string> task = this.api.GetDeviceStatus(
+            RequestSignature sig = GenerateRequestSignature(credentials.AccessToken);
+            Response.ApiResponse<Attributes> response = await api.GetDeviceStatus(
                 sig.Signature,
                 sig.Timestamp,
-                this.credentials.access_token,
+                credentials.AccessToken,
                 deviceId);
-            return task;
+
+            if (!response.IsSuccess)
+            {
+                throw new ResponseException(response.ResponseMessage, response.ResponseCode);
+            }
+
+            return response.Result;
         }
         
-        public Task<string> GetDeviceSpecifications(string deviceId)
+        public async Task<DeviceSpecs> GetDeviceSpecifications(string deviceId)
         {
-            if (this.credentials == null || this.credentials?.access_token.Length == 0)
+            if (credentials == null || credentials?.AccessToken.Length == 0)
             {
-                throw new Exceptions.UnauthorizedException("Unauthorized");
+                throw new UnauthorizedException("Unauthorized");
             }
 
-            RequestSignature sig = this.GenerateRequestSignature(this.credentials.access_token);
-            Task<string> task = this.api.GetDeviceSpecifications(
+            RequestSignature sig = GenerateRequestSignature(credentials.AccessToken);
+            Response.ApiResponse<DeviceSpecs> response = await api.GetDeviceSpecifications(
                 sig.Signature,
                 sig.Timestamp,
-                this.credentials.access_token,
+                credentials.AccessToken,
                 deviceId);
-            return task;
+
+            if (!response.IsSuccess)
+            {
+                throw new ResponseException(response.ResponseMessage, response.ResponseCode);
+            }
+
+            return response.Result;
         }
         
-        public Task<string> GetDeviceFunctions(string deviceId)
+        public async Task<DeviceFunctions> GetDeviceFunctions(string deviceId)
         {
-            if (this.credentials == null || this.credentials?.access_token.Length == 0)
+            if (credentials == null || credentials?.AccessToken.Length == 0)
             {
-                throw new Exceptions.UnauthorizedException("Unauthorized");
+                throw new UnauthorizedException("Unauthorized");
             }
 
-            RequestSignature sig = this.GenerateRequestSignature(this.credentials.access_token);
-            Task<string> task = this.api.GetDeviceFunctions(
+            RequestSignature sig = GenerateRequestSignature(credentials.AccessToken);
+            Response.ApiResponse<DeviceFunctions> response = await api.GetDeviceFunctions(
                 sig.Signature,
                 sig.Timestamp,
-                this.credentials.access_token,
+                this.credentials.AccessToken,
                 deviceId);
-            return task;
+
+            if (!response.IsSuccess)
+            {
+                throw new ResponseException(response.ResponseMessage, response.ResponseCode);
+            }
+
+            return response.Result;
         }
 
-        public Task<CommandResponse> SendCommands(string deviceId, Commands commands)
+        public async Task<CommandResponse> SendCommands(string deviceId, Commands commands)
         {
-            if (this.credentials == null || this.credentials?.access_token.Length == 0)
+            if (credentials == null || credentials?.AccessToken.Length == 0)
             {
-                throw new Exceptions.UnauthorizedException("Unauthorized");
+                throw new UnauthorizedException("Unauthorized");
             }
 
-            RequestSignature sig = this.GenerateRequestSignature(this.credentials.access_token);
-            Task<CommandResponse> task = this.api.SendCommands(
+            RequestSignature sig = GenerateRequestSignature(credentials.AccessToken);
+            CommandResponse response = await api.SendCommands(
                 sig.Signature,
                 sig.Timestamp,
-                this.credentials.access_token,
+                credentials.AccessToken,
                 deviceId,
                 commands);
-            return task;
+
+            if (!response.IsSuccess)
+            {
+                throw new ResponseException(response.ResponseMessage, response.ResponseCode);
+            }
+
+            return response;
         }
 
         protected RequestSignature GenerateRequestSignature()
         {
-            return this.GenerateRequestSignature(null);
+            return GenerateRequestSignature(null);
         }
 
         protected RequestSignature GenerateRequestSignature(string accessToken)
         {
-            long timestamp = this.GetTimestamp();
-            string str = this.clientId + (accessToken ?? "") + timestamp.ToString();
-            using (HMACSHA256 key = new HMACSHA256(this.StringEncode(this.clientSecret)))
+            long timestamp = GetTimestamp();
+            string str = clientId + (accessToken ?? "") + timestamp.ToString();
+            using (HMACSHA256 key = new HMACSHA256(StringEncode(clientSecret)))
             {
-                byte[] hashByte = key.ComputeHash(this.StringEncode(str));
+                byte[] hashByte = key.ComputeHash(StringEncode(str));
                 string signature = BitConverter.ToString(hashByte).Replace("-", "").ToUpper();
                 return new RequestSignature(signature, timestamp);
             }

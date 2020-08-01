@@ -2,7 +2,6 @@
 using RumahTuya.Request;
 using RumahTuya.Response;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RumahTuya.Devices
@@ -15,7 +14,7 @@ namespace RumahTuya.Devices
         Music
     }
 
-    public class BardiSmartLightBulbRGBWW : BardiSmartLightBulbWW, IDevice
+    public class BardiSmartLightBulbRGBWW : BardiSmartLightBulbWW, IDevice, IHasPowerSwitch
     {
         public BardiSmartLightBulbRGBWW(RumahTuya context, string deviceId) : base(context, deviceId)
         {
@@ -43,46 +42,39 @@ namespace RumahTuya.Devices
                     break;
             }
 
-            Commands commands = new Commands(new List<Command>()
-                {
-                    new Command("work_mode", workMode)
-                });
+            Commands commands = new Commands("work_mode", workMode);
 
-            return base._rumahTuya.SendCommands(deviceId, commands);
+            return rumahTuya.SendCommands(deviceId, commands);
         }
 
         public Task<CommandResponse> SetColorFromRGB(Rgb rgb)
         {
             Hsv hsv = rgb.To<Hsv>();
 
-            Commands commands = new Commands(new List<Command>()
-                {
-                    new Command("work_mode", "colour"),
-                    new Command("colour_data_v2", new {
-                        h = Math.Round(hsv.H),
-                        s = Math.Round(hsv.S * 1000),
-                        v = Math.Round(hsv.V * 1000)
-                    })
-                });
+            Commands commands = new Commands();
+            commands.AddCommand("work_mode", "colour");
+            commands.AddCommand("colour_data_v2", new {
+                h = Math.Round(hsv.H),
+                s = Math.Round(hsv.S * 1000),
+                v = Math.Round(hsv.V * 1000)
+            });
 
-            return base._rumahTuya.SendCommands(deviceId, commands);
+            return rumahTuya.SendCommands(deviceId, commands);
         }
 
         public Task<CommandResponse> SetColorFromHSL(Hsl hsl)
         {
             Hsv hsv = hsl.To<Hsv>();
 
-            Commands commands = new Commands(new List<Command>()
-                {
-                    new Command("work_mode", "colour"),
-                    new Command("colour_data_v2", new {
-                        h = Math.Round(hsv.H),
-                        s = Math.Round(hsv.S * 1000),
-                        v = Math.Round(hsv.V * 1000)
-                    })
-                });
+            Commands commands = new Commands();
+            commands.AddCommand("work_mode", "colour");
+            commands.AddCommand("colour_data_v2", new {
+                h = Math.Round(hsv.H),
+                s = Math.Round(hsv.S * 1000),
+                v = Math.Round(hsv.V * 1000)
+            });
 
-            return base._rumahTuya.SendCommands(deviceId, commands);
+            return rumahTuya.SendCommands(deviceId, commands);
         }
 
         public Task<CommandResponse> SetColor(System.Drawing.Color color)
@@ -94,17 +86,15 @@ namespace RumahTuya.Devices
                 B = color.GetBrightness()
             }.To<Hsv>();
 
-            Commands commands = new Commands(new List<Command>()
-                {
-                    new Command("work_mode", "colour"),
-                    new Command("colour_data_v2", new {
-                        h = Math.Round(hsv.H),
-                        s = Math.Round(hsv.S * 1000),
-                        v = Math.Round(hsv.V * 1000)
-                    })
-                });
+            Commands commands = new Commands();
+            commands.AddCommand("work_mode", "colour");
+            commands.AddCommand("colour_data_v2", new {
+                h = Math.Round(hsv.H),
+                s = Math.Round(hsv.S * 1000),
+                v = Math.Round(hsv.V * 1000)
+            });
 
-            return base._rumahTuya.SendCommands(deviceId, commands);
+            return rumahTuya.SendCommands(deviceId, commands);
         }
     }
 }

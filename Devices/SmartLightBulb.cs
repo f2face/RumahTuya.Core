@@ -1,35 +1,26 @@
 ﻿using RumahTuya.Exceptions;
 using RumahTuya.Request;
 using RumahTuya.Response;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RumahTuya.Devices
 {
-    public class SmartLightBulb : BaseDevice, IDevice
+    public class SmartLightBulb : BaseDevice, IDevice, IHasPowerSwitch
     {
         public SmartLightBulb(RumahTuya context, string deviceId) : base(context, deviceId)
         {
         }
 
-        public override Task<CommandResponse> PowerOn()
+        public Task<CommandResponse> PowerOn()
         {
-            Commands commands = new Commands(new List<Command>()
-                {
-                    new Command("switch_led", true)
-                });
-
-            return base._rumahTuya.SendCommands(deviceId, commands);
+            Commands commands = new Commands("switch_led", true);
+            return base.rumahTuya.SendCommands(deviceId, commands);
         }
 
-        public override Task<CommandResponse> PowerOff()
+        public Task<CommandResponse> PowerOff()
         {
-            Commands commands = new Commands(new List<Command>()
-                {
-                    new Command("switch_led", false)
-                });
-
-            return base._rumahTuya.SendCommands(deviceId, commands);
+            Commands commands = new Commands("switch_led", false);
+            return base.rumahTuya.SendCommands(deviceId, commands);
         }
     
         public Task<CommandResponse> SetBrightness(int brightness)
@@ -39,12 +30,8 @@ namespace RumahTuya.Devices
                 throw new NumberOutOfRangeException("Brightness must be between 10 and 1000");
             }
 
-            Commands commands = new Commands(new List<Command>()
-                {
-                    new Command("bright_value_v2", brightness)
-                });
-
-            return base._rumahTuya.SendCommands(deviceId, commands);
+            Commands commands = new Commands("bright_value_v2", brightness);
+            return base.rumahTuya.SendCommands(deviceId, commands);
         }
     
         public Task<CommandResponse> SetPowerCountdownTimer(int minutes)
@@ -54,12 +41,13 @@ namespace RumahTuya.Devices
                 throw new NumberOutOfRangeException("Timer must be between 1-1440 minutes");
             }
 
-            Commands commands = new Commands(new List<Command>()
-                {
-                    new Command("countdown_1", minutes*60)
-                });
+            Commands commands = new Commands("countdown_1", minutes * 60);
+            return base.rumahTuya.SendCommands(deviceId, commands);
+        }
 
-            return base._rumahTuya.SendCommands(deviceId, commands);
+        public async Task<int> GetCountdownTimer()
+        {
+            return int.Parse((await this.GetStatus()).GetAttribute("countdown_1"));
         }
     }
 }

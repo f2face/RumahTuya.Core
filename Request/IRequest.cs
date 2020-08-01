@@ -18,28 +18,28 @@ namespace RumahTuya.Request
             [Header("t")] long timestamp);
 
         [Get("/v1.0/devices/{device_id}")]
-        Task<string> GetDeviceInfo(
+        Task<Response.ApiResponse<DeviceInfo>> GetDeviceInfo(
             [Header("sign")] string signature,
             [Header("t")] long timestamp,
             [Header("access_token")] string accessToken,
             [AliasAs("device_id")] string deviceId);
         
         [Get("/v1.0/devices/{device_id}/status")]
-        Task<string> GetDeviceStatus(
+        Task<Response.ApiResponse<Attributes>> GetDeviceStatus(
             [Header("sign")] string signature,
             [Header("t")] long timestamp,
             [Header("access_token")] string accessToken,
             [AliasAs("device_id")] string deviceId);
         
         [Get("/v1.0/devices/{device_id}/specifications")]
-        Task<string> GetDeviceSpecifications(
+        Task<Response.ApiResponse<DeviceSpecs>> GetDeviceSpecifications(
             [Header("sign")] string signature,
             [Header("t")] long timestamp,
             [Header("access_token")] string accessToken,
             [AliasAs("device_id")] string deviceId);
         
         [Get("/v1.0/devices/{device_id}/functions")]
-        Task<string> GetDeviceFunctions(
+        Task<Response.ApiResponse<DeviceFunctions>> GetDeviceFunctions(
             [Header("sign")] string signature,
             [Header("t")] long timestamp,
             [Header("access_token")] string accessToken,

@@ -1,9 +1,14 @@
-﻿namespace RumahTuya.Request
+﻿using Newtonsoft.Json;
+
+namespace RumahTuya.Request
 {
-    public class RequestSignature
+    public struct RequestSignature
     {
-        public readonly string Signature;
-        public readonly long Timestamp;
+        [JsonProperty("sign")]
+        public string Signature { get; set; }
+
+        [JsonProperty("t")]
+        public long Timestamp { get; set; }
 
         public RequestSignature(string signature, long timestamp)
         {
