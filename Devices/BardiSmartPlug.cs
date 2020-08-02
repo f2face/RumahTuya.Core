@@ -11,25 +11,25 @@ namespace RumahTuya.Devices
 
         public async Task<Attributes> GetStatistics()
         {
-            Attributes response = await GetStatus();
+            Attributes response = await GetStatus().ConfigureAwait(false);
             return response;
         }
 
         public async Task<int> GetCurrent()
         {
-            Attributes attr = await GetStatistics();
+            Attributes attr = await GetStatistics().ConfigureAwait(false);
             return int.Parse(attr.GetAttribute("cur_current"));
         }
 
         public async Task<float> GetPower()
         {
-            Attributes attr = await GetStatistics();
+            Attributes attr = await GetStatistics().ConfigureAwait(false);
             return float.Parse(attr.GetAttribute("cur_power")) / 10;
         }
 
         public async Task<float> GetVoltage()
         {
-            Attributes attr = await GetStatistics();
+            Attributes attr = await GetStatistics().ConfigureAwait(false);
             return float.Parse(attr.GetAttribute("cur_voltage")) / 10;
         }
     }

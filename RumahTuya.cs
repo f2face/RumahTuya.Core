@@ -53,7 +53,8 @@ namespace RumahTuya
             RequestSignature sig = GenerateRequestSignature();
             Response.ApiResponse<Credentials> response = await api.GetAccessToken(
                 sig.Signature,
-                sig.Timestamp);
+                sig.Timestamp)
+                .ConfigureAwait(false);
 
             if (!response.IsSuccess)
             {
@@ -70,14 +71,15 @@ namespace RumahTuya
         {
             if (credentials == null || credentials?.RefreshToken.Length == 0)
             {
-                return await Authorize();
+                return await Authorize().ConfigureAwait(false);
             }
 
             RequestSignature sig = GenerateRequestSignature();
             Response.ApiResponse<Credentials> response = await api.RefreshAccessToken(
                 credentials.RefreshToken,
                 sig.Signature,
-                sig.Timestamp);
+                sig.Timestamp)
+                .ConfigureAwait(false);
 
             if (!response.IsSuccess)
             {
@@ -102,7 +104,8 @@ namespace RumahTuya
                 sig.Signature,
                 sig.Timestamp,
                 credentials.AccessToken,
-                deviceId);
+                deviceId)
+                .ConfigureAwait(false);
 
             if (!response.IsSuccess)
             {
@@ -124,7 +127,8 @@ namespace RumahTuya
                 sig.Signature,
                 sig.Timestamp,
                 credentials.AccessToken,
-                deviceId);
+                deviceId)
+                .ConfigureAwait(false);
 
             if (!response.IsSuccess)
             {
@@ -146,7 +150,8 @@ namespace RumahTuya
                 sig.Signature,
                 sig.Timestamp,
                 credentials.AccessToken,
-                deviceId);
+                deviceId)
+                .ConfigureAwait(false);
 
             if (!response.IsSuccess)
             {
@@ -168,7 +173,8 @@ namespace RumahTuya
                 sig.Signature,
                 sig.Timestamp,
                 credentials.AccessToken,
-                deviceId);
+                deviceId)
+                .ConfigureAwait(false);
 
             if (!response.IsSuccess)
             {
@@ -191,7 +197,8 @@ namespace RumahTuya
                 sig.Timestamp,
                 credentials.AccessToken,
                 deviceId,
-                commands);
+                commands)
+                .ConfigureAwait(false);
 
             if (!response.IsSuccess)
             {

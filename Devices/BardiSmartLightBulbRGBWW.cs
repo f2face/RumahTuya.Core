@@ -6,35 +6,35 @@ using System.Threading.Tasks;
 
 namespace RumahTuya.Devices
 {
-    public enum Mode
-    {
-        White,
-        Color,
-        Scene,
-        Music
-    }
-
     public class BardiSmartLightBulbRGBWW : BardiSmartLightBulbWW, IDevice, IHasPowerSwitch
     {
+        public enum WorkMode
+        {
+            White,
+            Color,
+            Scene,
+            Music
+        }
+
         public BardiSmartLightBulbRGBWW(RumahTuya context, string deviceId) : base(context, deviceId)
         {
         }
 
-        public Task<CommandResponse> ActivateMode(Mode mode)
+        public Task<CommandResponse> ActivateMode(WorkMode mode)
         {
             string workMode;
             switch (mode)
             {
-                case Mode.White:
+                case WorkMode.White:
                     workMode = "white";
                     break;
-                case Mode.Color:
+                case WorkMode.Color:
                     workMode = "colour";
                     break;
-                case Mode.Scene:
+                case WorkMode.Scene:
                     workMode = "scene";
                     break;
-                case Mode.Music:
+                case WorkMode.Music:
                     workMode = "music";
                     break;
                 default:

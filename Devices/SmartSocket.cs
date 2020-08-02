@@ -36,7 +36,7 @@ namespace RumahTuya.Devices
 
         public async Task<int> GetCountdownTimer()
         {
-            return int.Parse((await GetStatus()).GetAttribute("countdown_1"));
+            return int.Parse((await GetStatus().ConfigureAwait(false)).GetAttribute("countdown_1"));
         }
     }
 }

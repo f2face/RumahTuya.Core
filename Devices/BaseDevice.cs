@@ -21,22 +21,22 @@ namespace RumahTuya.Devices
 
         public async Task<string> GetName()
         {
-            return (await GetInfo()).Name;
+            return (await GetInfo().ConfigureAwait(false)).Name;
         }
 
         public async Task<string> GetLocalKey()
         {
-            return (await GetInfo()).LocalKey;
+            return (await GetInfo().ConfigureAwait(false)).LocalKey;
         }
 
         public async Task<string> GetIPAddress()
         {
-            return (await GetInfo()).IPAddress;
+            return (await GetInfo().ConfigureAwait(false)).IPAddress;
         }
 
         public async Task<bool> IsOnline()
         {
-            return (await GetInfo()).IsOnline;
+            return (await GetInfo().ConfigureAwait(false)).IsOnline;
         }
 
         public Task<DeviceInfo> GetInfo()
