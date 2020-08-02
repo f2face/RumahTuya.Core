@@ -20,7 +20,7 @@ namespace RumahTuya.Devices
 
         public Task<CommandResponse> SetNightVision(AutoOffOn nightVision)
         {
-            Commands commands = new Commands("basic_nightvision", nightVision);
+            Commands commands = new Commands("basic_nightvision", ((int)nightVision).ToString());
             return rumahTuya.SendCommands(deviceId, commands);
         }
 
@@ -45,7 +45,7 @@ namespace RumahTuya.Devices
 
         public Task<CommandResponse> SetMotionDetectionSensitivity(LowMediumHigh motionDetectionSensitivity)
         {
-            Commands commands = new Commands("motion_sensitivity", motionDetectionSensitivity);
+            Commands commands = new Commands("motion_sensitivity", ((int)motionDetectionSensitivity).ToString());
             return rumahTuya.SendCommands(deviceId, commands);
         }
 
@@ -70,7 +70,7 @@ namespace RumahTuya.Devices
 
         public Task<CommandResponse> SetSoundDetectionSensitivity(LowHigh soundDetectionSensitivity)
         {
-            Commands commands = new Commands("decibel_sensitivity", soundDetectionSensitivity);
+            Commands commands = new Commands("decibel_sensitivity", ((int)soundDetectionSensitivity).ToString());
             return rumahTuya.SendCommands(deviceId, commands);
         }
     }
