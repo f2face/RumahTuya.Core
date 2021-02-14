@@ -32,9 +32,45 @@ Send commands to the device.
 
     CommandResponse response;
 
-	// Power on
+    // Power on
     response = await stopKontak.PowerOn();
 
-	// Power off
+    // Power off
     response = await stopKontak.PowerOff();
 
+## Development
+### Add new device
+To add a new type of device, simply create a file in `Devices` directory and make sure it extends `BaseDevice`. If your device has power switch, you will also need to implement `IHasPowerSwitch` interface.
+
+See the following template:
+
+    namespace RumahTuya.Devices
+    {
+        public class MyNewDevice : BaseDevice, IHasPowerSwitch
+        {
+            public MyNewDevice(RumahTuya context, string deviceId) : base(context, deviceId)
+            {
+                // No need to do anything here
+            }
+
+            public Task<CommandResponse> PowerOn()
+            {
+                // Switch the device on
+            }
+
+            public Task<CommandResponse> PowerOff()
+            {
+                // Switch the device off
+            }
+
+            public Task<CommandResponse> SetPowerCountdownTimer(int minutes)
+            {
+                //
+            }
+
+            public async Task<int> GetCountdownTimer()
+            {
+                //
+            }
+        }
+    }
