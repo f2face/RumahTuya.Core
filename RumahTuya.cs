@@ -19,33 +19,36 @@ namespace RumahTuya
 
         private readonly string clientId;
         private readonly string clientSecret;
-        private readonly IRequest api;
+        private readonly ITuyaCloudAPI api;
 
         private Credentials credentials;
 
-        private HttpClient HttpClient()
+        private HttpClient HttpClient
         {
-            HttpClient httpClient = new HttpClient
+            get
             {
-                BaseAddress = new Uri(baseUrl)
-            };
+                HttpClient httpClient = new HttpClient
+                {
+                    BaseAddress = new Uri(baseUrl)
+                };
 
-            httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
-            httpClient.DefaultRequestHeaders.Add("client_id", clientId);
-            httpClient.DefaultRequestHeaders.Add("sign_method", signMethod);
-            httpClient.DefaultRequestHeaders.Add("lang", language);
+                httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
+                httpClient.DefaultRequestHeaders.Add("client_id", clientId);
+                httpClient.DefaultRequestHeaders.Add("sign_method", signMethod);
+                httpClient.DefaultRequestHeaders.Add("lang", language);
 
-            httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
-            httpClient.DefaultRequestHeaders.Add("Keep-Alive", "timeout=600");
+                httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+                httpClient.DefaultRequestHeaders.Add("Keep-Alive", "timeout=600");
 
-            return httpClient;
+                return httpClient;
+            }
         }
 
         public RumahTuya(string clientId, string clientSecret)
         {
             this.clientId = clientId;
             this.clientSecret = clientSecret;
-            api = RestService.For<IRequest>(HttpClient());
+            api = RestService.For<ITuyaCloudAPI>(HttpClient);
         }
 
         public async Task<Credentials> Authorize()

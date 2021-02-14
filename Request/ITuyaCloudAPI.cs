@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace RumahTuya.Request
 {
-    internal interface IRequest
+    internal interface ITuyaCloudAPI
     {
         [Get("/v1.0/token?grant_type=1")]
         Task<Response.ApiResponse<Credentials>> GetAccessToken(
